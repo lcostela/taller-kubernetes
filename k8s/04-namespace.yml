@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: desarrollo
+  labels:
+    ambiente: desa
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 03-deployment
+  labels:
+    app: spring-boot-app
+  namespace: desarrollo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring-boot-app
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      name: 01-pod
+      labels:
+        app: spring-boot-app
+    spec:
+      containers:
+        - name: pod
+          image: localhost:5000/k8s-springboot-app:latest
+          env:
+            - name: BAR
+              value: "Enviroment var defined in 01-pod.yml"

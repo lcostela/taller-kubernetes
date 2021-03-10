@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: 07-persistentvolume
+spec:
+  capacity:
+    storage: 5Mi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "/tmp/07-volume"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: 07-persistentvolume-claim
+  namespace: desarrollo
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 03-deployment
+  labels:
+    app: spring-boot-app
+  namespace: desarrollo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring-boot-app
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      name: 01-pod
+      labels:
+        app: spring-boot-app
+    spec:
+      containers:
+        - name: pod
+          image: localhost:5000/k8s-springboot-app:latest
+          env:
+            - name: BAR
+              value: "Enviroment var defined in 01-pod.yml"
+          volumeMounts:
+            - name: my-volume
+              mountPath: /volume-mount-path
+      volumes:
+        - name: my-volume
+          persistentVolumeClaim:
+            claimName: 07-persistentvolume-claim
+

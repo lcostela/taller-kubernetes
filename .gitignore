@@ -1,0 +1,32 @@
+k8sSpringBootApp/target/
+k8sSpringBootApp/!.mvn/wrapper/maven-wrapper.jar
+k8sSpringBootApp/!**/src/main/**/target/
+k8sSpringBootApp/!**/src/test/**/target/
+
+### STS ###
+k8sSpringBootApp/.apt_generated
+k8sSpringBootApp/.classpath
+k8sSpringBootApp/.factorypath
+k8sSpringBootApp/.project
+k8sSpringBootApp/.settings
+k8sSpringBootApp/.springBeans
+k8sSpringBootApp/.sts4-cache
+
+### IntelliJ IDEA ###
+k8sSpringBootApp/.idea
+k8sSpringBootApp/*.iws
+k8sSpringBootApp/*.iml
+k8sSpringBootApp/*.ipr
+
+### NetBeans ###
+k8sSpringBootApp//nbproject/private/
+k8sSpringBootApp//nbbuild/
+k8sSpringBootApp//dist/
+k8sSpringBootApp//nbdist/
+k8sSpringBootApp//.nb-gradle/
+k8sSpringBootApp/build/
+k8sSpringBootApp/!**/src/main/**/build/
+k8sSpringBootApp/!**/src/test/**/build/
+
+### VS Code ###
+k8sSpringBootApp/.vscode/

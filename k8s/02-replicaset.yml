@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: 02-rs
+  labels:
+    app: spring-boot-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: spring-boot-app
+  template:
+    metadata:
+      name: 01-pod
+      labels:
+        app: spring-boot-app
+    spec:
+      containers:
+        - name: pod
+          image: localhost:5000/k8s-springboot-app:latest
+          env:
+            - name: BAR
+              value: "Enviroment var defined in 01-pod.yml"

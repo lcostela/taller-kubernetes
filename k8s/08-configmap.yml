@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: 07-configmap-file
+  namespace: desarrollo
+data:
+  application.yml: |-
+    management:
+      endpoints:
+        enabled-by-default: false
+        web:
+          exposure:
+            include: "*"
+      endpoint:
+        metrics:
+          enabled: true
+        prometheus:
+          enabled: true
+        health:
+          enabled: true
+          probes:
+            enabled: true
+        info:
+          enabled: true
+        refresh:
+          enabled: true
+        restart:
+          enabled: true
+    config:
+      variable: test
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: 07-configmap-env
+  namespace: desarrollo
+data:
+  BAR: "Environment variable from ConfigMap"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 03-deployment
+  labels:
+    app: spring-boot-app
+  namespace: desarrollo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring-boot-app
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      name: 01-pod
+      labels:
+        app: spring-boot-app
+    spec:
+      containers:
+        - name: pod
+          image: localhost:5000/k8s-springboot-app:latest
+          envFrom:
+            - configMapRef:
+                name: 07-configmap-env
+          volumeMounts:
+            - name: my-volume
+              mountPath: /volume-mount-path
+            - name: configmap-volume
+              mountPath: /etc/spring-boot-app
+      volumes:
+        - name: configmap-volume
+          configMap:
+            name: 07-configmap-file
+        - name: my-volume
+          persistentVolumeClaim:
+            claimName: 07-persistentvolume-claim
