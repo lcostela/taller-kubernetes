@@ -2,6 +2,8 @@ package uy.com.pyxis.k8sapp.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -17,6 +19,7 @@ import uy.com.pyxis.k8sapp.config.Properties;
 public class Controller {
 
   private final Properties properties;
+  private final String FILES_PATH = "/volume-mount-path";
   @Value("${HOSTNAME:There is not information of HOSTNAME}")
   private String hostName;
   @Value("${BAR:There is not information of environment variable BAR}")
@@ -50,16 +53,24 @@ public class Controller {
 
   @PutMapping(value = "/create/{file}", produces = {MediaType.TEXT_PLAIN_VALUE})
   public String createFile(@PathVariable String file) throws IOException {
-    var createdFile = new File("/volume-mount-path/" + file);
-    var created = createdFile.createNewFile();
-    return created ? "Created " + file : file + " already exists";
+    if (Files.exists(Path.of(FILES_PATH))) {
+      var createdFile = new File("/volume-mount-path/" + file);
+      var created = createdFile.createNewFile();
+      return created ? "Created " + file : file + " already exists";
+    } else {
+      return "Directory of files does not exists.";
+    }
   }
 
   @GetMapping(value = "/list", produces = {MediaType.TEXT_PLAIN_VALUE})
   public String listFile() {
-    return Stream.of(Objects.requireNonNull(new File("/volume-mount-path").listFiles()))
-                 .filter(file -> !file.isDirectory())
-                 .map(File::getName)
-                 .collect(Collectors.toSet()).toString();
+    if (Files.exists(Path.of(FILES_PATH))) {
+      return Stream.of(Objects.requireNonNull(new File("/volume-mount-path").listFiles()))
+                   .filter(file -> !file.isDirectory())
+                   .map(File::getName)
+                   .collect(Collectors.toSet()).toString();
+    } else {
+      return "Directory of files does not exists.";
+    }
   }
 }

@@ -18,6 +18,7 @@
 
   <properties>
     <java.version>11</java.version>
+    <spring-cloud-starter.version>3.0.1</spring-cloud-starter.version>
     <micrometer-registry-prometheus.version>1.6.2</micrometer-registry-prometheus.version>
   </properties>
 
@@ -36,6 +37,12 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter</artifactId>
+      <version>${spring-cloud-starter.version}</version>
     </dependency>
 
     <dependency>
